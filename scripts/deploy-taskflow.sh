@@ -8,8 +8,29 @@ CURRENT_DIR="$INSTALL_DIR/current"
 RELEASES_DIR="$INSTALL_DIR/releases"
 JAR_TARGET_PATTERN="${JAR_TARGET_PATTERN:-target/*.jar}"
 HEALTHCHECK_SCRIPT="${HEALTHCHECK_SCRIPT:-$PROJECT_DIR/scripts/healthcheck-taskflow.sh}"
+SYSTEMD_UNIT_SOURCE="${SYSTEMD_UNIT_SOURCE:-$PROJECT_DIR/ops/systemd/taskflow.service}"
+AUTO_INSTALL_SERVICE="${AUTO_INSTALL_SERVICE:-false}"
 
 cd "$PROJECT_DIR"
+
+if ! sudo systemctl cat "$SERVICE_NAME" >/dev/null 2>&1; then
+  if [ "$AUTO_INSTALL_SERVICE" = "true" ]; then
+    echo "Systemd service '$SERVICE_NAME' not found. Installing from $SYSTEMD_UNIT_SOURCE"
+    sudo cp "$SYSTEMD_UNIT_SOURCE" "/etc/systemd/system/${SERVICE_NAME}.service"
+    sudo systemctl daemon-reload
+    sudo systemctl enable "$SERVICE_NAME"
+    sudo systemctl start "$SERVICE_NAME"
+  else
+    echo "Systemd service '$SERVICE_NAME' not found."
+    echo "Run the initial setup first:"
+    echo "  sudo cp $SYSTEMD_UNIT_SOURCE /etc/systemd/system/${SERVICE_NAME}.service"
+    echo "  sudo systemctl daemon-reload"
+    echo "  sudo systemctl enable $SERVICE_NAME"
+    echo "  sudo systemctl start $SERVICE_NAME"
+    echo "Or run this deploy with AUTO_INSTALL_SERVICE=true."
+    exit 1
+  fi
+fi
 
 echo "[1/8] Updating source"
 git pull --ff-only
@@ -68,4 +89,3 @@ echo "[8/8] Service status"
 sudo systemctl status "$SERVICE_NAME" --no-pager
 
 echo "Deploy completed successfully."
-

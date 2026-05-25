@@ -39,6 +39,8 @@ sudo systemctl start taskflow
 sudo systemctl status taskflow
 ```
 
+If you get `Unit taskflow.service not found` during deploy, execute this step first.
+
 ## 2. Logs and diagnostics
 
 ```bash
@@ -61,6 +63,12 @@ Then deploy:
 /home/joao/Documentos/Projetos/task/scripts/deploy-taskflow.sh
 ```
 
+Alternative (auto-installs service when missing):
+
+```bash
+AUTO_INSTALL_SERVICE=true /home/joao/Documentos/Projetos/task/scripts/deploy-taskflow.sh
+```
+
 The deploy script performs:
 
 1. `git pull --ff-only`
@@ -76,4 +84,3 @@ The deploy script performs:
 - Keep `/etc/taskflow.env` as `600`.
 - Use a dedicated DB user with least privilege.
 - Configure journal retention if needed via `/etc/systemd/journald.conf`.
-
