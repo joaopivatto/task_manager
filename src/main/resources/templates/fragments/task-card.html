@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="card mb-2 shadow-sm kanban-task-card task-details-trigger"
+     th:fragment="taskCard(task, selectedCategoryId)"
+     th:attr="data-task-id=${task.id},
+              data-task-details-trigger='true',
+              data-task-title=${task.title},
+              data-task-description=${task.description},
+              data-task-category=${task.category != null ? task.category.name : 'No category'},
+              data-task-deadline=${task.deadline != null ? #temporals.format(task.deadline, 'dd/MM/yyyy') : '-'},
+              data-task-completed-at=${task.completedAt != null ? #temporals.format(task.completedAt, 'dd/MM/yyyy HH:mm') : '-'},
+              data-task-status-label=${task.status.displayName},
+              data-task-status-class=${task.status.badgeClass}">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+            <h6 class="card-title mb-1" th:text="${task.title}">Task title</h6>
+            <small th:if="${task.deadline}" class="text-body-secondary" th:text="${#temporals.format(task.deadline, 'dd/MM/yyyy')}"></small>
+        </div>
+        <p class="card-text small text-body-secondary mb-2" th:text="${task.description}"></p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-2 align-items-center">
+                <span class="badge text-bg-light border" th:text="${task.category != null ? task.category.name : 'No category'}"></span>
+                <span class="badge" th:classappend="${task.status.badgeClass}" th:text="${task.status.displayName}"></span>
+            </div>
+            <div class="task-card-actions" data-no-modal="true">
+                <a class="btn btn-sm btn-outline-secondary" data-no-modal="true" th:href="@{/tasks/{id}(id=${task.id})}" title="Edit task"><i class="bi bi-pencil"></i></a>
+                <form th:action="@{/tasks/{id}/delete(id=${task.id})}" method="post" data-no-modal="true">
+                    <input type="hidden" name="categoryId" th:if="${selectedCategoryId != null}" th:value="${selectedCategoryId}">
+                    <button class="btn btn-sm btn-outline-danger" data-no-modal="true" type="submit" title="Delete task"><i class="bi bi-trash"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

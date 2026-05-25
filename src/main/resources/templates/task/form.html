@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: base(${pageTitle}, ~{::content})}">
+<th:block th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h1 class="h5 mb-0" th:text="${formHeading}"></h1>
+                </div>
+                <div class="card-body">
+                    <form th:action="${formAction}" th:object="${task}" method="post" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Title *</label>
+                            <input type="text" class="form-control" th:field="*{title}" placeholder="Task title">
+                            <div class="text-danger small" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" rows="4" th:field="*{description}" placeholder="Describe this task"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" th:field="*{status}">
+                                <option th:each="status : ${statuses}" th:value="${status}" th:text="${status.displayName}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Deadline</label>
+                            <input type="date" class="form-control" th:field="*{deadline}">
+                            <div class="text-danger small" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" th:field="*{categoryId}">
+                                <option value="">No category</option>
+                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12 d-flex gap-2">
+                            <button class="btn btn-primary" type="submit" th:text="${submitLabel}"></button>
+                            <a class="btn btn-outline-secondary" th:href="@{/board}">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

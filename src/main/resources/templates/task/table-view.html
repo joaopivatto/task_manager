@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: base('Table View', ~{::content})}">
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Task Table</h1>
+        <a class="btn btn-primary" th:href="@{/tasks/new}">New Task</a>
+    </div>
+
+    <form class="row g-2 mb-3" method="get" th:action="@{/tasks/table}">
+        <div class="col-12 col-md-5 col-lg-4">
+            <select class="form-select" name="categoryId">
+                <option value="">All categories</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.name}"
+                        th:selected="${selectedCategoryId != null and selectedCategoryId == category.id}"></option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" type="submit">Filter</button>
+        </div>
+        <div class="col-auto" th:if="${selectedCategoryId != null}">
+            <a class="btn btn-outline-secondary" th:href="@{/tasks/table}">Clear</a>
+        </div>
+    </form>
+
+    <th:block th:each="status : ${statuses}">
+        <div th:replace="~{fragments/task-table :: taskTable(${status}, ${board.get(status)})}"></div>
+    </th:block>
+</th:block>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="taskTable(status, tasks)">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center" th:classappend="${status.columnClass}">
+            <h5 class="mb-0" th:text="${status.displayName}">TO DO</h5>
+            <span class="badge" th:classappend="${status.badgeClass}" th:text="${#lists.size(tasks)}">0</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(tasks)}">
+                    <td colspan="5" class="text-center text-body-secondary py-3">No tasks</td>
+                </tr>
+                <tr th:each="task : ${tasks}"
+                    class="task-table-row task-details-trigger"
+                    th:attr="data-task-details-trigger='true',
+                             data-task-title=${task.title},
+                             data-task-description=${task.description},
+                             data-task-category=${task.category != null ? task.category.name : 'No category'},
+                             data-task-deadline=${task.deadline != null ? #temporals.format(task.deadline, 'dd/MM/yyyy') : '-'},
+                             data-task-completed-at=${task.completedAt != null ? #temporals.format(task.completedAt, 'dd/MM/yyyy HH:mm') : '-'},
+                             data-task-status-label=${task.status.displayName},
+                             data-task-status-class=${task.status.badgeClass}">
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.category != null ? task.category.name : 'No category'}"></td>
+                    <td th:text="${task.deadline != null ? #temporals.format(task.deadline, 'dd/MM/yyyy') : '-'}"></td>
+                    <td>
+                        <span class="badge" th:classappend="${task.status.badgeClass}" th:text="${task.status.displayName}"></span>
+                    </td>
+                    <td class="text-end" data-no-modal="true">
+                        <a class="btn btn-sm btn-outline-secondary" data-no-modal="true" th:href="@{/tasks/{id}(id=${task.id})}">Edit</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

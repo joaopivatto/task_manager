@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: base('Archived Tasks', ~{::content})}">
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Archived Tasks</h1>
+        <a class="btn btn-outline-secondary" th:href="@{/board}">Back to board</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Completed at</th>
+                        <th>Deadline</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(tasks)}">
+                        <td colspan="4" class="text-center text-body-secondary py-4">No archived tasks yet</td>
+                    </tr>
+                    <tr th:each="task : ${tasks}">
+                        <td th:text="${task.title}"></td>
+                        <td th:text="${task.category != null ? task.category.name : 'No category'}"></td>
+                        <td th:text="${task.completedAt != null ? #temporals.format(task.completedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                        <td th:text="${task.deadline != null ? #temporals.format(task.deadline, 'dd/MM/yyyy') : '-'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>
+

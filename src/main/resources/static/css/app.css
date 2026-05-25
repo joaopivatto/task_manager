@@ -1,0 +1,97 @@
+.kanban-column {
+    min-height: 22rem;
+}
+
+.kanban-list {
+    min-height: 18rem;
+}
+
+.kanban-list .card {
+    cursor: grab;
+}
+
+.kanban-list .card:active {
+    cursor: grabbing;
+}
+
+.status-column {
+    font-weight: 600;
+}
+
+.status-column-todo {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.status-column-doing {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-column-done {
+    background-color: #198754;
+    color: #ffffff;
+}
+
+.status-column-stuck {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.status-badge {
+    font-weight: 600;
+}
+
+.status-todo {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+.status-doing {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-done {
+    background-color: #198754;
+    color: #ffffff;
+}
+
+.status-stuck {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.task-details-trigger {
+    cursor: pointer;
+}
+
+.task-table-row td {
+    vertical-align: middle;
+}
+
+.task-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.task-card-actions form {
+    margin: 0;
+}
+
+.task-card-actions .btn {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.navbar .nav-link.active {
+    color: #ffffff;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.18);
+    border-radius: 0.4rem;
+}

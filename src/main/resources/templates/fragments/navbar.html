@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark" th:fragment="navbar">
+    <div class="container">
+        <a class="navbar-brand fw-semibold" th:href="@{/board}">TaskFlow</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navMenu" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentPath == '/board'} ? 'active'" th:href="@{/board}">Kanban</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentPath == '/tasks/table'} ? 'active'" th:href="@{/tasks/table}">Table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${currentPath == '/tasks/archive'} ? 'active'" th:href="@{/tasks/archive}">Archive</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       th:classappend="${#strings.startsWith(currentPath, '/tasks/') and currentPath != '/tasks/table' and currentPath != '/tasks/archive'} ? 'active'"
+                       th:href="@{/tasks/new}">New Task</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
