@@ -1,0 +1,26 @@
+[Unit]
+Description=TaskFlow Spring Boot Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=taskflow
+Group=taskflow
+WorkingDirectory=/opt/taskflow/current
+EnvironmentFile=/etc/taskflow.env
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /opt/taskflow/current/task.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+# Hardening baseline for local production usage
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/taskflow
+
+[Install]
+WantedBy=multi-user.target
+
