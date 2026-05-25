@@ -52,6 +52,18 @@ Then open:
 ./mvnw test
 ```
 
+## Local production operations (systemd)
+
+To run TaskFlow automatically at boot and deploy updates with one command, see:
+
+- `docs/OPERATIONS.md`
+
+Quick deploy command after setup:
+
+```bash
+/home/joao/Documentos/Projetos/task/scripts/deploy-taskflow.sh
+```
+
 ## Packaging notes
 
 `pom.xml` includes the same packaging plugin pattern used in AjaxSolutions projects:
