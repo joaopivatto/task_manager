@@ -3,6 +3,7 @@ set -euo pipefail
 
 PROJECT_DIR="${PROJECT_DIR:-/home/joao/Documentos/Projetos/task}"
 SERVICE_NAME="${SERVICE_NAME:-taskflow}"
+SERVICE_USER="${SERVICE_USER:-taskflow}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/taskflow}"
 CURRENT_DIR="$INSTALL_DIR/current"
 RELEASES_DIR="$INSTALL_DIR/releases"
@@ -55,13 +56,16 @@ fi
 
 echo "[3/8] Preparing release directories"
 sudo mkdir -p "$release_dir" "$CURRENT_DIR"
+sudo chown "$SERVICE_USER:$SERVICE_USER" "$RELEASES_DIR" "$CURRENT_DIR" "$release_dir"
 
 echo "[4/8] Publishing JAR to release $release_id"
 sudo cp "$new_jar" "$release_jar"
+sudo chown "$SERVICE_USER:$SERVICE_USER" "$release_jar"
 sudo chmod 640 "$release_jar"
 
 echo "[5/8] Pointing current symlink to new release"
 sudo ln -sfn "$release_jar" "$CURRENT_DIR/task.jar"
+sudo chown -h "$SERVICE_USER:$SERVICE_USER" "$CURRENT_DIR/task.jar"
 
 echo "[6/8] Restarting service: $SERVICE_NAME"
 if ! sudo systemctl restart "$SERVICE_NAME"; then
