@@ -2,9 +2,12 @@ package com.joaopivatto.task.service;
 
 import com.joaopivatto.task.dto.TaskRequestDTO;
 import com.joaopivatto.task.entity.Task;
+import com.joaopivatto.task.entity.TaskUpdate;
 import com.joaopivatto.task.enums.TaskStatus;
 import com.joaopivatto.task.repository.TaskRepository;
 import com.joaopivatto.task.validator.TaskDeadlineValidator;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +23,16 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final CategoryService categoryService;
     private final TaskDeadlineValidator deadlineValidator;
+    private final EntityManager entityManager;
 
     public TaskService(TaskRepository taskRepository,
                        CategoryService categoryService,
-                       TaskDeadlineValidator deadlineValidator) {
+                       TaskDeadlineValidator deadlineValidator,
+                       EntityManager entityManager) {
         this.taskRepository = taskRepository;
         this.categoryService = categoryService;
         this.deadlineValidator = deadlineValidator;
+        this.entityManager = entityManager;
     }
 
     @Transactional(readOnly = true)
@@ -107,6 +113,41 @@ public class TaskService {
     @Transactional
     public void delete(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void archiveNow(Long id) {
+        Task task = findById(id);
+        if (task.getStatus() != TaskStatus.DONE) {
+            throw new IllegalStateException("Only DONE tasks can be archived manually");
+        }
+        task.setArchived(true);
+        taskRepository.save(task);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskUpdate> findUpdatesByTaskId(Long taskId) {
+        TypedQuery<TaskUpdate> query = entityManager.createQuery(
+            "select u from TaskUpdate u where u.task.id = :taskId order by u.createdAt desc, u.id desc",
+            TaskUpdate.class
+        );
+        query.setParameter("taskId", taskId);
+        return query.getResultList();
+    }
+
+    @Transactional
+    public TaskUpdate addUpdateComment(Long taskId, String comment) {
+        String normalizedComment = comment == null ? "" : comment.trim();
+        if (normalizedComment.isBlank()) {
+            throw new IllegalArgumentException("Update comment cannot be empty");
+        }
+
+        Task task = findById(taskId);
+        TaskUpdate update = new TaskUpdate();
+        update.setTask(task);
+        update.setComment(normalizedComment);
+        entityManager.persist(update);
+        return update;
     }
 
     @Transactional

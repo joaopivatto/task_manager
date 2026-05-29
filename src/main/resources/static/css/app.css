@@ -66,6 +66,16 @@
     cursor: pointer;
 }
 
+#taskDetailsModal .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+#taskUpdatesList {
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
 .task-table-row td {
     vertical-align: middle;
 }

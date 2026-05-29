@@ -8,8 +8,10 @@
               data-task-title=${task.title},
               data-task-description=${task.description},
               data-task-category=${task.category != null ? task.category.name : 'No category'},
+              data-task-category-id=${task.category != null ? task.category.id : ''},
               data-task-deadline=${task.deadline != null ? #temporals.format(task.deadline, 'dd/MM/yyyy') : '-'},
               data-task-completed-at=${task.completedAt != null ? #temporals.format(task.completedAt, 'dd/MM/yyyy HH:mm') : '-'},
+              data-task-status-value=${task.status},
               data-task-status-label=${task.status.displayName},
               data-task-status-class=${task.status.badgeClass}">
     <div class="card-body">
@@ -25,6 +27,10 @@
             </div>
             <div class="task-card-actions" data-no-modal="true">
                 <a class="btn btn-sm btn-outline-secondary" data-no-modal="true" th:href="@{/tasks/{id}(id=${task.id})}" title="Edit task"><i class="bi bi-pencil"></i></a>
+                <form th:if="${task.status.name() == 'DONE'}" th:action="@{/tasks/{id}/archive(id=${task.id})}" method="post" data-no-modal="true">
+                    <input type="hidden" name="categoryId" th:if="${selectedCategoryId != null}" th:value="${selectedCategoryId}">
+                    <button class="btn btn-sm btn-outline-success" data-no-modal="true" type="submit" title="Archive now"><i class="bi bi-archive"></i></button>
+                </form>
                 <form th:action="@{/tasks/{id}/delete(id=${task.id})}" method="post" data-no-modal="true">
                     <input type="hidden" name="categoryId" th:if="${selectedCategoryId != null}" th:value="${selectedCategoryId}">
                     <button class="btn btn-sm btn-outline-danger" data-no-modal="true" type="submit" title="Delete task"><i class="bi bi-trash"></i></button>

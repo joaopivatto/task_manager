@@ -34,3 +34,17 @@ CREATE TABLE IF NOT EXISTS task (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS task_update (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  task_id BIGINT NOT NULL,
+  comment VARCHAR(2000) NOT NULL,
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (id),
+  KEY idx_task_update_task_created (task_id, created_at),
+  CONSTRAINT fk_task_update_task
+    FOREIGN KEY (task_id)
+    REFERENCES task (id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
